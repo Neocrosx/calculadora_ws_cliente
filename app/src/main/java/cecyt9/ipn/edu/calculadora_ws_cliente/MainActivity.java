@@ -1,10 +1,13 @@
 package cecyt9.ipn.edu.calculadora_ws_cliente;
 
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -14,12 +17,10 @@ import org.ksoap2.transport.HttpTransportSE;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String NAMESPACE = "http://192.168.0.4:8080/miProyectoWeb";
-    private static String URL = "http://192.168.0.4:8080/miProyectoWeb/misWS?WSDL";
-
     EditText txtNum1, txtNum2;
     TextView resultadoo;
-
+    String num1, num2, resultado;
+    int op;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,127 +32,115 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sumar(View v){
-
-        String METHOD_NAME = "suma";
-        String SOAP_ACTION = "http://192.168.0.4:8080/miProyectoWeb/suma";
-
-        SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-
-        request.addProperty("num1", txtNum1.getText().toString());
-        request.addProperty("num2", txtNum2.getText().toString());
-
-        SoapSerializationEnvelope envelope =
-                new SoapSerializationEnvelope(SoapEnvelope.VER11);
-        envelope.dotNet=true;
-        envelope.setOutputSoapObject(request);
-        /* Se captura la respuesta y se muestra en el TextView */
-        //float respuesta;
-        HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-        try {
-            androidHttpTransport.call(SOAP_ACTION, envelope);
-            //SoapObject result= (SoapObject) envelope.getResponse();
-            //respuesta = result.getProperty(0).toString();
-            SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
-        //    respuesta = Float.parseFloat(resultado.toString());
-            resultadoo.setText(resultado.toString());
-        }
-        catch(Exception e){
-            e.printStackTrace();
-            resultadoo.setText(e.toString());
-        }
+        op = 1;
+        num1 = txtNum1.getText().toString();
+        num2 = txtNum2.getText().toString();
+        operacion ope = new operacion();
+        ope.execute();
     }
 
     public void restar(View v){
-
-        String METHOD_NAME = "resta";
-        String SOAP_ACTION = "http://192.168.0.4:8080/miProyectoWeb/resta";
-
-
-        SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-
-        request.addProperty("num1", txtNum1.getText().toString());
-        request.addProperty("num2", txtNum2.getText().toString());
-
-        SoapSerializationEnvelope envelope =
-                new SoapSerializationEnvelope(SoapEnvelope.VER11);
-        envelope.dotNet=true;
-        envelope.setOutputSoapObject(request);
-        /* Se captura la respuesta y se muestra en el TextView */
-        //float respuesta;
-        HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-        try {
-            androidHttpTransport.call(SOAP_ACTION, envelope);
-            //SoapObject result= (SoapObject) envelope.getResponse();
-            //respuesta = result.getProperty(0).toString();
-            SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
-            //    respuesta = Float.parseFloat(resultado.toString());
-            resultadoo.setText(resultado.toString());
-        }
-        catch(Exception e){
-            e.printStackTrace();
-            resultadoo.setText(e.toString());
-        }
+        op = 2;
+        num1 = txtNum1.getText().toString();
+        num2 = txtNum2.getText().toString();
+        operacion ope = new operacion();
+        ope.execute();
     }
     public void multiplicar(View v){
-
-        String METHOD_NAME = "multiplicacion";
-        String SOAP_ACTION = "http://192.168.0.4:8080/miProyectoWeb/multiplicacion";
-
-
-        SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-
-        request.addProperty("num1", txtNum1.getText().toString());
-        request.addProperty("num2", txtNum2.getText().toString());
-
-        SoapSerializationEnvelope envelope =
-                new SoapSerializationEnvelope(SoapEnvelope.VER11);
-        envelope.dotNet=true;
-        envelope.setOutputSoapObject(request);
-        /* Se captura la respuesta y se muestra en el TextView */
-        //float respuesta;
-        HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-        try {
-            androidHttpTransport.call(SOAP_ACTION, envelope);
-            //SoapObject result= (SoapObject) envelope.getResponse();
-            //respuesta = result.getProperty(0).toString();
-            SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
-            //    respuesta = Float.parseFloat(resultado.toString());
-            resultadoo.setText(resultado.toString());
-        }
-        catch(Exception e){
-                e.printStackTrace();
-            resultadoo.setText(e.toString());
-        }
+        op = 3;
+        num1 = txtNum1.getText().toString();
+        num2 = txtNum2.getText().toString();
+        operacion ope = new operacion();
+        ope.execute();
     }
     public void dividir(View v){
+        op = 4;
+        num1 = txtNum1.getText().toString();
+        num2 = txtNum2.getText().toString();
+        operacion ope = new operacion();
+        ope.execute();
+    }
 
-        String METHOD_NAME = "division";
-        String SOAP_ACTION = "http://192.168.0.4:8080/miProyectoWeb/division";
+    private class operacion extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Void... params) {
+// TODO: attempt authentication against a network service.
+//WebService - Opciones
+            String NAMESPACE = "http://ws/";
+            String URL="http://192.168.0.14:8080/CalculatorWSApplication/CalculatorWS?WSDL";
+            String METHOD_NAME = "";
 
-        SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+            if(op == 1)
+                METHOD_NAME = "suma";
+            else{
+                if(op == 2)
+                    METHOD_NAME = "resta";
+                else{
+                    if(op == 3)
+                        METHOD_NAME = "multiplicacion";
+                    else{
+                        if(op == 4)
+                            METHOD_NAME = "division";
+                    }
+                }
+            }
 
-        request.addProperty("num1", txtNum1.getText().toString());
-        request.addProperty("num2", txtNum2.getText().toString());
 
-        SoapSerializationEnvelope envelope =
-                new SoapSerializationEnvelope(SoapEnvelope.VER11);
-        envelope.dotNet=true;
-        envelope.setOutputSoapObject(request);
-        /* Se captura la respuesta y se muestra en el TextView */
-        //float respuesta;
-        HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-        try {
-            androidHttpTransport.call(SOAP_ACTION, envelope);
-            //SoapObject result= (SoapObject) envelope.getResponse();
-            //respuesta = result.getProperty(0).toString();
-            SoapPrimitive resultado = (SoapPrimitive) envelope.getResponse();
-            //    respuesta = Float.parseFloat(resultado.toString());
-            resultadoo.setText(resultado.toString());
+
+            String SOAP_ACTION = "http://ws/"+METHOD_NAME;
+   //         Toast.makeText(getApplicationContext(), SOAP_ACTION, Toast.LENGTH_SHORT).show();
+
+            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+            request.addProperty("num1", num1);
+            request.addProperty("num2", num2);
+
+
+
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.setOutputSoapObject(request);
+
+
+            HttpTransportSE ht = new HttpTransportSE(URL);
+            try {
+                resultado = "entro y fallo aquí"+" "+SOAP_ACTION+ " "+num1+" "+num2;
+                ht.call(SOAP_ACTION, envelope);
+
+                SoapPrimitive response = (SoapPrimitive)envelope.getResponse();
+
+                resultado=response.toString();
+
+                Log.i("Resultado: ",resultado);
+
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+
+
+                return false;
+            }
+            return true;
         }
-        catch(Exception e){
-            e.printStackTrace();
-            resultadoo.setText(e.toString());
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            if(success==false){
+                Toast.makeText(getApplicationContext(), resultado, Toast.LENGTH_LONG).show();
+                resultadoo.setText(resultado);
+            }
+            else{
+                Toast.makeText(getApplicationContext(), "El resultado es: "+resultado, Toast.LENGTH_LONG).show();
+                resultadoo.setText(resultado);
+                ///es la interaccion
+
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
         }
     }
+
 
 }
