@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">calculadora_ws_cliente</string>
+
+    <string-array name="cambio">
+        <item>Elige</item>
+        <item>DOLAR</item>
+        <item>EURO</item>
+        <item>DOLAR AUSTRALIANO</item>
+        <item>REAL BRASILENIO</item>
+        <item>CORONA DE ESTONIA</item>
+    </string-array>
 </resources>

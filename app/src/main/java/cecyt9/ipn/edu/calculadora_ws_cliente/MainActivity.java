@@ -1,5 +1,6 @@
 package cecyt9.ipn.edu.calculadora_ws_cliente;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -140,6 +141,12 @@ public class MainActivity extends AppCompatActivity {
         protected void onCancelled() {
             Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void restful(View v){
+        Intent envia = new Intent(this, Monedas.class);
+        finish();
+        startActivity(envia);
     }
 
 
